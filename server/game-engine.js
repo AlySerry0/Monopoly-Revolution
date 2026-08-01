@@ -2,8 +2,9 @@
 const { BOARD_SPACES, CHANCE_CARDS, COMMUNITY_CHEST_CARDS } = require('./board-data');
 
 class GameEngine {
-    constructor(roomId, players) {
+    constructor(roomId, players, onStateChange = null) {
         this.roomId = roomId;
+        this.onStateChange = onStateChange;
         this.players = players.map((p, idx) => ({
             id: p.id,
             name: p.name,
@@ -31,6 +32,12 @@ class GameEngine {
         this.logs = [];
         
         this.addLog(`Game started with ${this.players.length} players!`);
+    }
+
+    notifyStateChange() {
+        if (typeof this.onStateChange === 'function') {
+            this.onStateChange(this.getState());
+        }
     }
 
     addLog(msg) {
@@ -749,12 +756,14 @@ class GameEngine {
 
         if (this.turnPhase === 'ROLL') {
             this.rollDice(bot.id);
+            this.notifyStateChange();
             setTimeout(() => this.executeBotTurn(), 1000);
             return;
         }
 
         if (this.turnPhase === 'BUS_CHOICE') {
             this.makeBusChoice(bot.id, 'SUM');
+            this.notifyStateChange();
             setTimeout(() => this.executeBotTurn(), 1000);
             return;
         }
@@ -765,12 +774,14 @@ class GameEngine {
                 this.buyProperty(bot.id);
             }
             this.turnPhase = 'END_TURN';
+            this.notifyStateChange();
             setTimeout(() => this.endTurn(bot.id), 1000);
             return;
         }
 
         if (this.turnPhase === 'END_TURN') {
             this.endTurn(bot.id);
+            this.notifyStateChange();
         }
     }
 

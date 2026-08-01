@@ -108,7 +108,7 @@ class RoomManager {
         return { success: true, room };
     }
 
-    startGame(roomId, socketId) {
+    startGame(roomId, socketId, onStateChange = null) {
         const room = this.rooms.get(roomId);
         if (!room) return { error: 'Room not found' };
         if (room.hostId !== socketId) return { error: 'Only the host can start the game' };
@@ -136,7 +136,7 @@ class RoomManager {
             });
         }
 
-        room.game = new GameEngine(roomId, room.players);
+        room.game = new GameEngine(roomId, room.players, onStateChange);
         return { success: true, room };
     }
 

@@ -69,7 +69,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on('start-game', ({ roomId }) => {
-        const result = roomManager.startGame(roomId, socket.id);
+        const onStateChange = (state) => {
+            io.to(roomId).emit('game-state-updated', state);
+        };
+
+        const result = roomManager.startGame(roomId, socket.id, onStateChange);
         if (result.error) {
             socket.emit('error-msg', result.error);
             return;
