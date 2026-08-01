@@ -29,14 +29,25 @@ class LandingUI {
     }
 
     initListeners() {
+        const btnDemo = document.getElementById('btn-demo-game');
         const btnCreate = document.getElementById('btn-create-game');
         const btnJoin = document.getElementById('btn-join-game');
         const nameInput = document.getElementById('player-name-input');
         const roomInput = document.getElementById('room-code-input');
 
+        btnDemo.onclick = () => {
+            const name = nameInput.value.trim() || 'Player 1';
+            window.soundManager.playClick();
+
+            // Set auto-start flag on room creation
+            this.autoStartDemo = true;
+            window.socketClient.createRoom(name, this.selectedToken);
+        };
+
         btnCreate.onclick = () => {
             const name = nameInput.value.trim() || 'Player 1';
             window.soundManager.playClick();
+            this.autoStartDemo = false;
             window.socketClient.createRoom(name, this.selectedToken);
         };
 

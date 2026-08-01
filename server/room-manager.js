@@ -112,7 +112,29 @@ class RoomManager {
         const room = this.rooms.get(roomId);
         if (!room) return { error: 'Room not found' };
         if (room.hostId !== socketId) return { error: 'Only the host can start the game' };
-        if (room.players.length < 2) return { error: 'Need at least 2 players to start' };
+
+        // If only 1 player, add 2 AI Bot players so user can play solo!
+        if (room.players.length === 1) {
+            const botTokens = TOKENS.filter(t => t.id !== room.players[0].token);
+            room.players.push({
+                id: 'bot_1',
+                name: 'Mr. Monopoly (Bot)',
+                token: botTokens[0].id,
+                ready: true,
+                isHost: false,
+                isBot: true,
+                connected: true
+            });
+            room.players.push({
+                id: 'bot_2',
+                name: 'Revolution Bot',
+                token: botTokens[1].id,
+                ready: true,
+                isHost: false,
+                isBot: true,
+                connected: true
+            });
+        }
 
         room.game = new GameEngine(roomId, room.players);
         return { success: true, room };

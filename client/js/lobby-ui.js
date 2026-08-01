@@ -47,6 +47,14 @@ class LobbyUI {
 
     updateLobby(room) {
         this.room = room;
+
+        // Auto start if Quick Demo was clicked
+        if (window.landingUI && window.landingUI.autoStartDemo) {
+            window.landingUI.autoStartDemo = false;
+            window.socketClient.startGame();
+            return;
+        }
+
         window.app.showScreen('lobby');
 
         document.getElementById('lobby-room-code').innerText = room.id;

@@ -679,13 +679,14 @@ class GameEngine {
 
     endTurn(playerId) {
         const player = this.getCurrentPlayer();
-        if (player.id !== playerId) return { error: 'Not your turn' };
+        if (player.id !== playerId && !player.isBot) return { error: 'Not your turn' };
         if (this.turnPhase !== 'END_TURN' && this.turnPhase !== 'LANDED') return { error: 'Cannot end turn yet' };
 
         // If rolled doubles and not in jail, player gets another roll
         if (this.lastRoll && this.lastRoll.isDoubles && !player.inJail && this.doublesCount > 0 && this.doublesCount < 3) {
             this.turnPhase = 'ROLL';
             this.addLog(`${player.name} gets to roll again for rolling doubles!`);
+            this.checkBotTurn();
             return { success: true, extraTurn: true };
         }
 
@@ -698,7 +699,49 @@ class GameEngine {
         this.doublesCount = 0;
         this.lastRoll = null;
         this.addLog(`It is now ${this.getCurrentPlayer().name}'s turn!`);
+
+        this.checkBotTurn();
         return { success: true };
+    }
+
+    checkBotTurn() {
+        const curr = this.getCurrentPlayer();
+        if (curr && curr.isBot && !curr.bankrupt && this.turnPhase !== 'GAME_OVER') {
+            setTimeout(() => {
+                this.executeBotTurn();
+            }, 1000);
+        }
+    }
+
+    executeBotTurn() {
+        const bot = this.getCurrentPlayer();
+        if (!bot || !bot.isBot || bot.bankrupt) return;
+
+        if (this.turnPhase === 'ROLL') {
+            this.rollDice(bot.id);
+            setTimeout(() => this.executeBotTurn(), 1000);
+            return;
+        }
+
+        if (this.turnPhase === 'BUS_CHOICE') {
+            this.makeBusChoice(bot.id, 'SUM');
+            setTimeout(() => this.executeBotTurn(), 1000);
+            return;
+        }
+
+        if (this.turnPhase === 'LANDED') {
+            const space = BOARD_SPACES[bot.position];
+            if (['PROPERTY', 'RAILROAD', 'UTILITY'].includes(space.type) && !this.getOwner(space.id) && bot.cash >= space.price) {
+                this.buyProperty(bot.id);
+            }
+            this.turnPhase = 'END_TURN';
+            setTimeout(() => this.endTurn(bot.id), 1000);
+            return;
+        }
+
+        if (this.turnPhase === 'END_TURN') {
+            this.endTurn(bot.id);
+        }
     }
 
     getState() {

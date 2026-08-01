@@ -27,6 +27,12 @@ class App {
         if (target) {
             target.classList.add('active');
             this.currentScreen = screenId;
+
+            if (screenId === 'game' && window.gameUI && window.gameUI.boardRenderer) {
+                setTimeout(() => {
+                    window.gameUI.boardRenderer.initResize();
+                }, 50);
+            }
         }
     }
 
