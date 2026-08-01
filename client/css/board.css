@@ -1,0 +1,376 @@
+/* client/css/board.css */
+#screen-game {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-top-bar {
+    height: 56px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0;
+    border-bottom: 1px solid var(--border-glow);
+    z-index: 10;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-mini {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: var(--color-cyan);
+}
+
+.room-tag {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.room-tag strong {
+    color: var(--color-gold);
+    font-family: var(--font-heading);
+}
+
+.turn-indicator {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: var(--color-emerald);
+    text-shadow: 0 0 10px rgba(0, 232, 123, 0.5);
+    background: rgba(0, 232, 123, 0.1);
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 232, 123, 0.3);
+}
+
+.top-bar-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.game-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    gap: 16px;
+    padding: 16px;
+    overflow: hidden;
+}
+
+.game-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.sidebar-header h3 {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    color: var(--color-cyan);
+}
+
+.cash-display {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-emerald);
+    text-shadow: 0 0 10px rgba(0, 232, 123, 0.4);
+}
+
+/* Portfolio list */
+.portfolio-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.portfolio-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    border-left-width: 6px;
+}
+
+.portfolio-card-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.portfolio-card-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.portfolio-card-actions button {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Board Canvas wrapper */
+.board-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#monopoly-canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 25px rgba(0, 212, 255, 0.2));
+}
+
+/* Leaderboard & Activity log */
+.players-leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.leaderboard-item {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.leaderboard-item.active-turn {
+    border: 1px solid var(--color-cyan);
+    background: rgba(0, 212, 255, 0.1);
+}
+
+.leaderboard-item.bankrupt {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+.activity-log {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+    max-height: 200px;
+}
+
+.log-entry {
+    line-height: 1.3;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    padding-bottom: 4px;
+}
+
+.log-entry .time {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.68rem;
+}
+
+.game-chat-box {
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Bottom Action Bar */
+.game-bottom-bar {
+    height: 72px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    border-top: 1px solid var(--border-glow);
+    z-index: 10;
+}
+
+.action-buttons-group {
+    display: flex;
+    gap: 14px;
+}
+
+.btn-action {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+}
+
+/* Specific Modals Styling */
+.bus-options {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.prop-card-modal {
+    text-align: left;
+}
+
+.prop-modal-header {
+    padding: 16px;
+    border-radius: 8px 8px 0 0;
+    color: #000;
+    font-family: var(--font-heading);
+    text-align: center;
+}
+
+.prop-modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rent-schedule {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.auction-price-display {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--color-gold);
+    margin: 16px 0 6px 0;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.auction-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.trade-modal-content {
+    max-width: 700px;
+}
+
+.trade-grid {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 16px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+.trade-side {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.trade-side h3 {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--color-cyan);
+}
+
+.trade-props-select {
+    max-height: 160px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.custom-select {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 8px;
+    color: #FFF;
+    font-family: var(--font-body);
+}
+
+.card-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.card-type-badge {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    color: var(--color-gold);
+}
+
+.card-icon {
+    font-size: 3.5rem;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    max-width: 340px;
+}
+
+.victory-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.trophy-icon {
+    font-size: 4rem;
+    animation: bounceTrophy 1s infinite alternate ease-in-out;
+}
+
+@keyframes bounceTrophy {
+    from { transform: translateY(0); }
+    to { transform: translateY(-12px); }
+}

@@ -1,0 +1,227 @@
+/* client/css/lobby.css */
+#screen-lobby {
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.lobby-container {
+    width: 100%;
+    max-width: 960px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    gap: 20px;
+}
+
+.lobby-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 16px;
+}
+
+.lobby-header h2 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--color-cyan);
+}
+
+.room-code-badge {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px dashed var(--color-gold);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.room-code-badge span {
+    color: var(--color-gold);
+    font-weight: 900;
+}
+
+.room-code-badge button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px;
+}
+
+.lobby-body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.players-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.players-section h3 {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.player-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    overflow-y: auto;
+}
+
+.player-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.player-card.is-you {
+    border-color: var(--color-cyan);
+    background: rgba(0, 212, 255, 0.08);
+}
+
+.player-token-icon {
+    font-size: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.player-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.player-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.host-badge {
+    background: var(--color-gold);
+    color: #000;
+    font-size: 0.65rem;
+    font-family: var(--font-heading);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.ready-status {
+    font-size: 0.8rem;
+    font-family: var(--font-heading);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.ready-status.is-ready {
+    color: var(--color-emerald);
+}
+
+.lobby-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.token-picker-box, .lobby-chat-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.token-picker-box h4, .lobby-chat-box h4 {
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    color: var(--color-cyan);
+}
+
+.lobby-chat-box {
+    flex: 1;
+}
+
+.chat-messages {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 180px;
+    font-size: 0.85rem;
+}
+
+.chat-msg {
+    line-height: 1.3;
+}
+
+.chat-msg .sender {
+    font-weight: 700;
+    color: var(--color-cyan);
+}
+
+.chat-msg .time {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: 4px;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.chat-input-row input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #FFF;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.lobby-footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 16px;
+}

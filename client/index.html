@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly Revolution — Online Radial Multiplayer</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Socket.io client -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <link rel="stylesheet" href="css/lobby.css">
+    <link rel="stylesheet" href="css/board.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Toast Notification Banner -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- SCREEN 1: LANDING PAGE -->
+        <div id="screen-landing" class="screen active">
+            <canvas id="bg-particles"></canvas>
+            <div class="landing-content">
+                <div class="logo-container">
+                    <div class="ring-glow"></div>
+                    <h1 class="logo-title">MONOPOLY</h1>
+                    <div class="logo-subtitle">REVOLUTION</div>
+                    <p class="tagline">ELECTRONIC BANKING • CIRCULAR BOARD • RADIAL SPEED DIE</p>
+                </div>
+
+                <div class="landing-card glass">
+                    <div class="input-group">
+                        <label for="player-name-input">PLAYER NAME</label>
+                        <input type="text" id="player-name-input" placeholder="Enter your name" maxlength="16" autocomplete="off">
+                    </div>
+
+                    <div class="token-selection">
+                        <label>CHOOSE YOUR TOKEN</label>
+                        <div id="landing-token-picker" class="token-grid"></div>
+                    </div>
+
+                    <div class="landing-actions">
+                        <button id="btn-create-game" class="btn btn-primary btn-glow">
+                            <span class="btn-icon">⚡</span> CREATE NEW GAME
+                        </button>
+                        <div class="divider"><span>OR</span></div>
+                        <div class="join-box">
+                            <input type="text" id="room-code-input" placeholder="ENTER 6-LETTER CODE" maxlength="6" uppercase autocomplete="off">
+                            <button id="btn-join-game" class="btn btn-secondary">JOIN</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: LOBBY -->
+        <div id="screen-lobby" class="screen">
+            <div class="lobby-container glass">
+                <div class="lobby-header">
+                    <h2>GAME LOBBY</h2>
+                    <div class="room-code-badge" id="lobby-room-code-badge">
+                        CODE: <span id="lobby-room-code">------</span>
+                        <button id="btn-copy-code" title="Copy Room Code">📋</button>
+                    </div>
+                </div>
+
+                <div class="lobby-body">
+                    <div class="players-section">
+                        <h3>CONNECTED PLAYERS (<span id="lobby-player-count">0</span>/6)</h3>
+                        <div id="lobby-player-list" class="player-cards-grid"></div>
+                    </div>
+
+                    <div class="lobby-sidebar">
+                        <div class="token-picker-box">
+                            <h4>SELECT TOKEN</h4>
+                            <div id="lobby-token-picker" class="token-grid"></div>
+                        </div>
+
+                        <div class="lobby-chat-box">
+                            <h4>LOBBY CHAT</h4>
+                            <div id="lobby-chat-messages" class="chat-messages"></div>
+                            <div class="chat-input-row">
+                                <input type="text" id="lobby-chat-input" placeholder="Type a message..." maxlength="100">
+                                <button id="btn-send-lobby-chat" class="btn btn-small">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lobby-footer">
+                    <button id="btn-leave-lobby" class="btn btn-danger">LEAVE LOBBY</button>
+                    <button id="btn-toggle-ready" class="btn btn-secondary">TOGGLE READY</button>
+                    <button id="btn-start-game" class="btn btn-primary btn-glow" disabled>START GAME</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: GAME BOARD -->
+        <div id="screen-game" class="screen">
+            <!-- Top Status Bar -->
+            <div class="game-top-bar glass">
+                <div class="brand">
+                    <span class="logo-mini">🎲 REVOLUTION</span>
+                    <span class="room-tag">ROOM: <strong id="game-room-code">------</strong></span>
+                </div>
+                <div class="turn-indicator" id="turn-indicator">
+                    WAITING FOR GAME START...
+                </div>
+                <div class="top-bar-controls">
+                    <button id="btn-toggle-sound" class="icon-btn" title="Toggle Sound">🔊</button>
+                    <button id="btn-show-rules" class="icon-btn" title="Game Rules">❓</button>
+                </div>
+            </div>
+
+            <div class="game-layout">
+                <!-- Left Sidebar: Property Portfolio -->
+                <div class="game-sidebar left-sidebar glass">
+                    <div class="sidebar-header">
+                        <h3>MY PORTFOLIO</h3>
+                        <div class="cash-display">$<span id="player-cash">1500</span></div>
+                    </div>
+                    <div class="portfolio-list" id="portfolio-list">
+                        <div class="empty-state">No properties owned yet.</div>
+                    </div>
+                </div>
+
+                <!-- Center Area: Circular Canvas Board -->
+                <div class="board-container">
+                    <canvas id="monopoly-canvas" width="900" height="900"></canvas>
+                </div>
+
+                <!-- Right Sidebar: Players & Activity Log -->
+                <div class="game-sidebar right-sidebar glass">
+                    <div class="sidebar-header">
+                        <h3>PLAYERS</h3>
+                    </div>
+                    <div class="players-leaderboard" id="players-leaderboard"></div>
+
+                    <div class="sidebar-header log-header">
+                        <h3>GAME LOG</h3>
+                    </div>
+                    <div class="activity-log" id="activity-log"></div>
+
+                    <div class="game-chat-box">
+                        <div id="game-chat-messages" class="chat-messages"></div>
+                        <div class="chat-input-row">
+                            <input type="text" id="game-chat-input" placeholder="Chat..." maxlength="80">
+                            <button id="btn-send-game-chat" class="btn btn-small">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Action Control Bar -->
+            <div class="game-bottom-bar glass">
+                <div class="action-buttons-group">
+                    <button id="btn-roll-dice" class="btn btn-action btn-roll btn-glow" disabled>
+                        <span class="btn-icon">🎲</span> ROLL DICE
+                    </button>
+                    <button id="btn-buy-prop" class="btn btn-action btn-buy" disabled>
+                        <span class="btn-icon">🏢</span> BUY PROPERTY
+                    </button>
+                    <button id="btn-start-auction" class="btn btn-action btn-auction" disabled>
+                        <span class="btn-icon">🔨</span> AUCTION
+                    </button>
+                    <button id="btn-open-trade" class="btn btn-action btn-trade">
+                        <span class="btn-icon">🤝</span> TRADE
+                    </button>
+                    <button id="btn-end-turn" class="btn btn-action btn-end" disabled>
+                        <span class="btn-icon">⏭️</span> END TURN
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL OVERLAYS -->
+
+        <!-- Bus Choice Modal -->
+        <div id="modal-bus-choice" class="modal-overlay">
+            <div class="modal-content glass animate-pop">
+                <h2>🚌 SPEED DIE: BUS MOVE</h2>
+                <p>Choose how many spaces to move based on your roll:</p>
+                <div class="bus-options" id="bus-options-container"></div>
+            </div>
+        </div>
+
+        <!-- Property Detail Modal -->
+        <div id="modal-prop-detail" class="modal-overlay">
+            <div class="modal-content glass prop-card-modal animate-pop">
+                <div class="prop-modal-header" id="prop-modal-color">
+                    <h3 id="prop-modal-name">Property Name</h3>
+                </div>
+                <div class="prop-modal-body">
+                    <p class="prop-price">Price: $<span id="prop-modal-price">0</span></p>
+                    <div class="rent-schedule" id="prop-modal-rents"></div>
+                    <div class="prop-details-grid">
+                        <div>House Cost: $<span id="prop-modal-house-cost">0</span></div>
+                        <div>Mortgage: $<span id="prop-modal-mortgage">0</span></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary close-modal-btn">CLOSE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auction Modal -->
+        <div id="modal-auction" class="modal-overlay">
+            <div class="modal-content glass animate-pop">
+                <h2>🔨 PROPERTY AUCTION</h2>
+                <div class="auction-target" id="auction-target-name">Property Name</div>
+                <div class="auction-price-display">
+                    CURRENT BID: $<span id="auction-current-bid">10</span>
+                </div>
+                <div class="auction-bidder-info" id="auction-highest-bidder">No bids yet</div>
+                <div class="auction-controls">
+                    <button id="btn-bid-10" class="btn btn-primary">+ $10</button>
+                    <button id="btn-bid-50" class="btn btn-primary">+ $50</button>
+                    <button id="btn-bid-100" class="btn btn-primary">+ $100</button>
+                    <button id="btn-withdraw-bid" class="btn btn-danger">WITHDRAW</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade Proposal Modal -->
+        <div id="modal-trade" class="modal-overlay">
+            <div class="modal-content glass trade-modal-content animate-pop">
+                <h2>🤝 PROPOSE TRADE</h2>
+                <div class="trade-grid">
+                    <div class="trade-side">
+                        <h3>YOU OFFER</h3>
+                        <div class="input-group">
+                            <label>Cash ($):</label>
+                            <input type="number" id="trade-offer-cash" value="0" min="0" step="10">
+                        </div>
+                        <div class="trade-props-select" id="trade-offer-props"></div>
+                    </div>
+                    <div class="trade-divider">⇄</div>
+                    <div class="trade-side">
+                        <h3>TRADING WITH</h3>
+                        <select id="trade-partner-select" class="custom-select"></select>
+                        <div class="input-group">
+                            <label>Requested Cash ($):</label>
+                            <input type="number" id="trade-req-cash" value="0" min="0" step="10">
+                        </div>
+                        <div class="trade-props-select" id="trade-req-props"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="btn-send-trade" class="btn btn-primary">SEND PROPOSAL</button>
+                    <button class="btn btn-secondary close-modal-btn">CANCEL</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Incoming Trade Response Modal -->
+        <div id="modal-trade-response" class="modal-overlay">
+            <div class="modal-content glass animate-pop">
+                <h2>📩 TRADE OFFER RECEIVED</h2>
+                <div id="trade-offer-summary" class="trade-summary-box"></div>
+                <div class="modal-actions">
+                    <button id="btn-accept-trade" class="btn btn-primary">ACCEPT TRADE</button>
+                    <button id="btn-decline-trade" class="btn btn-danger">DECLINE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Draw Modal -->
+        <div id="modal-card" class="modal-overlay">
+            <div class="modal-content glass card-modal animate-pop">
+                <div class="card-type-badge" id="card-type-badge">CHANCE</div>
+                <div class="card-icon" id="card-icon">❓</div>
+                <div class="card-text" id="card-text">Card text goes here...</div>
+                <button class="btn btn-primary close-modal-btn">OK</button>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div id="modal-game-over" class="modal-overlay">
+            <div class="modal-content glass victory-modal animate-pop">
+                <div class="trophy-icon">🏆</div>
+                <h2>GAME OVER</h2>
+                <h3 id="winner-name-display">Player 1 Wins!</h3>
+                <p>The undisputed Monopoly Revolution Champion!</p>
+                <div class="modal-actions">
+                    <button id="btn-return-lobby" class="btn btn-primary btn-glow">RETURN TO LOBBY</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/constants.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/board-renderer.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/landing-ui.js"></script>
+    <script src="js/lobby-ui.js"></script>
+    <script src="js/game-ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

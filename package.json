@@ -1,0 +1,23 @@
+{
+  "name": "monopoly-revolution-online",
+  "version": "1.0.0",
+  "description": "Online Monopoly Revolution clone with radial circular board and real-time multiplayer",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "keywords": [
+    "monopoly",
+    "game",
+    "socket.io",
+    "express",
+    "canvas"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
