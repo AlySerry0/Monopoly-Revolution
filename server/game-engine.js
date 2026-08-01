@@ -8,6 +8,7 @@ class GameEngine {
             id: p.id,
             name: p.name,
             token: p.token,
+            isBot: p.isBot || false,
             cash: 1500, // Starting electronic balance
             position: 0, // GO
             inJail: false,

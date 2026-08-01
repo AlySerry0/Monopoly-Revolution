@@ -70,6 +70,30 @@ const ZONE_EVENTS = [
     { text: "TAX REBATE: All players in this zone collect $50!", action: "ZONE_GAIN", amount: 50 }
 ];
 
+const CHANCE_CARDS = [
+    { text: "Advance to GO (Collect $200)", action: "MOVE_TO", target: 0, collectGo: true },
+    { text: "Advance to Illinois Ave", action: "MOVE_TO", target: 24, collectGo: true },
+    { text: "Advance to St. Charles Place", action: "MOVE_TO", target: 11, collectGo: true },
+    { text: "Bank pays you dividend of $50", action: "GAIN_MONEY", amount: 50 },
+    { text: "Get Out of Jail Free card", action: "GET_JAIL_CARD" },
+    { text: "Go Back 3 Spaces", action: "MOVE_RELATIVE", amount: -3 },
+    { text: "Go to Jail! Do not pass GO", action: "GO_TO_JAIL" },
+    { text: "Pay speed fine of $15", action: "PAY_MONEY", amount: 15 },
+    { text: "Your building loan matures. Collect $150", action: "GAIN_MONEY", amount: 150 }
+];
+
+const COMMUNITY_CHEST_CARDS = [
+    { text: "Advance to GO (Collect $200)", action: "MOVE_TO", target: 0, collectGo: true },
+    { text: "Bank error in your favor. Collect $200", action: "GAIN_MONEY", amount: 200 },
+    { text: "Doctor's fee. Pay $50", action: "PAY_MONEY", amount: 50 },
+    { text: "From sale of stock you get $50", action: "GAIN_MONEY", amount: 50 },
+    { text: "Get Out of Jail Free card", action: "GET_JAIL_CARD" },
+    { text: "Go to Jail! Do not pass GO", action: "GO_TO_JAIL" },
+    { text: "Income tax refund. Collect $20", action: "GAIN_MONEY", amount: 20 },
+    { text: "Receive $25 consultancy fee", action: "GAIN_MONEY", amount: 25 },
+    { text: "You inherit $100", action: "GAIN_MONEY", amount: 100 }
+];
+
 const TOKENS = [
     { id: 'car', name: 'Racecar', icon: '🏎️', color: '#FF2D7B' },
     { id: 'hat', name: 'Top Hat', icon: '🎩', color: '#00D4FF' },
@@ -84,5 +108,7 @@ module.exports = {
     ZONES,
     BOARD_SPACES,
     ZONE_EVENTS,
+    CHANCE_CARDS,
+    COMMUNITY_CHEST_CARDS,
     TOKENS
 };
