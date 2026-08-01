@@ -274,6 +274,8 @@ class GameEngine {
 
         this.turnPhase = 'LANDED';
     }
+
+    calculateRent(spaceId) {
         const space = BOARD_SPACES[spaceId];
         const owner = this.getOwner(spaceId);
         if (!owner || owner.mortgaged[spaceId]) return 0;
