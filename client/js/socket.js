@@ -9,10 +9,20 @@ class SocketClient {
 
     connect() {
         if (this.socket) return;
-        this.socket = io();
+
+        this.socket = io({
+            transports: ['websocket', 'polling'],
+            reconnection: true,
+            reconnectionAttempts: 20,
+            reconnectionDelay: 1000,
+            timeout: 20000
+        });
 
         this.socket.on('connect', () => {
             console.log('Connected to server. Socket ID:', this.socket.id);
+            if (this.roomId && window.app) {
+                window.app.showToast('Reconnected to server!', 'success');
+            }
         });
 
         this.socket.on('room-updated', (room) => {
@@ -40,8 +50,15 @@ class SocketClient {
             if (window.app) window.app.showToast(errMsg, 'error');
         });
 
-        this.socket.on('disconnect', () => {
-            if (window.app) window.app.showToast('Disconnected from server', 'error');
+        this.socket.on('connect_error', (err) => {
+            console.warn('Socket connection error:', err.message);
+        });
+
+        this.socket.on('disconnect', (reason) => {
+            console.warn('Socket disconnected. Reason:', reason);
+            if (reason === 'io server disconnect') {
+                this.socket.connect();
+            }
         });
     }
 
