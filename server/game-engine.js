@@ -218,8 +218,8 @@ class GameEngine {
             return;
         }
 
-        if (space.type === 'COMMUNITY_CHEST') {
-            this.drawCard(player.id, 'COMMUNITY_CHEST');
+        if (space.type === 'ZONE_SPACE') {
+            this.handleZoneSpaceLanding(player.id, space.zone);
             return;
         }
 
@@ -246,7 +246,34 @@ class GameEngine {
         }
     }
 
-    calculateRent(spaceId) {
+    handleZoneSpaceLanding(playerId, zoneName) {
+        const player = this.getPlayer(playerId);
+        const { ZONE_EVENTS, ZONES } = require('./board-data');
+        const zoneInfo = ZONES[zoneName] || { name: zoneName, start: 0, end: 39 };
+
+        // Select random Zone event
+        const event = ZONE_EVENTS[Math.floor(Math.random() * ZONE_EVENTS.length)];
+        this.addLog(`⚡ ${player.name} triggered ${zoneInfo.name} EVENT: "${event.text}"`);
+
+        // Target all players currently in this zone
+        const playersInZone = this.players.filter(p => !p.bankrupt && p.position >= zoneInfo.start && p.position <= zoneInfo.end);
+
+        playersInZone.forEach(p => {
+            if (event.action === 'ZONE_PAY') {
+                p.cash -= event.amount;
+                this.addLog(`${p.name} paid $${event.amount} Zone Inspection Fee.`);
+                this.checkBankruptcy(p.id);
+            } else if (event.action === 'ZONE_GAIN') {
+                p.cash += event.amount;
+                this.addLog(`${p.name} received $${event.amount} Zone Bonus!`);
+            } else if (event.action === 'ZONE_JAIL') {
+                this.sendToJail(p.id);
+                this.addLog(`🚨 ${p.name} was sent to JAIL by Zone Lockdown!`);
+            }
+        });
+
+        this.turnPhase = 'LANDED';
+    }
         const space = BOARD_SPACES[spaceId];
         const owner = this.getOwner(spaceId);
         if (!owner || owner.mortgaged[spaceId]) return 0;
